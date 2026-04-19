@@ -18,7 +18,7 @@ export class SkillController {
       const skill = await this.skillService.createSkill({
         skillName,
         description,
-        level: level ?? SkillLevel.BEGINNER,
+        level: level ?? SkillLevel.beginner,
         userId,
       });
       res.status(201).json({ skill });

@@ -22,7 +22,7 @@ export class AuthController {
         res.status(400).json({ error: 'name, email and password are required' });
         return;
       }
-      const validRole = Object.values(UserRole).includes(role) ? role : UserRole.LEARNER;
+      const validRole = Object.values(UserRole).includes(role) ? role : UserRole.learner;
       const user = await this.authService.register({ name, email, password, role: validRole, learningGoals });
       res.status(201).json({ user });
     } catch (err: unknown) {

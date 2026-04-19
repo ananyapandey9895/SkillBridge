@@ -12,8 +12,8 @@ router.use(authenticate);
 router.get('/me', ctrl.getMe);
 router.put('/me', ctrl.updateProfile);
 router.get('/mentors', ctrl.getMentors);
-router.get('/', requireRole(UserRole.ADMIN), ctrl.getAll);
-router.patch('/:id/block', requireRole(UserRole.ADMIN), ctrl.blockUser);
-router.patch('/:id/unblock', requireRole(UserRole.ADMIN), ctrl.unblockUser);
+router.get('/', requireRole(UserRole.admin), ctrl.getAll);
+router.patch('/:id/block', requireRole(UserRole.admin), ctrl.blockUser);
+router.patch('/:id/unblock', requireRole(UserRole.admin), ctrl.unblockUser);
 
 export default router;
