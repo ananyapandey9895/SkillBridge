@@ -85,3 +85,8 @@ The platform emphasizes **clean backend architecture, object-oriented design, an
 ## 9. Conclusion
 SkillBridge aims to create a collaborative learning ecosystem by enabling fair skill exchange and structured mentorship.  
 The project is designed with strong backend fundamentals and scalable architecture, making it suitable for semester-long evaluation and real-world extension.
+
+---
+
+## 10. Deployed link
+https://skill-bridge-two-mauve.vercel.app/
