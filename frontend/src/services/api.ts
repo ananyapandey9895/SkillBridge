@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const base = import.meta.env.BACKEND_URL as string | undefined;
+const base = import.meta.env.VITE_API_URL as string | undefined;
 if (!base) console.warn('[api] VITE_API_URL is not set — requests may fail');
 
 const api = axios.create({
