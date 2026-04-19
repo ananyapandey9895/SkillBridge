@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String
+  email         String   @unique
+  password      String
+  role          Role     @default(learner)
+  isBlocked     Boolean  @default(false)
+  rating        Float?
+  learningGoals String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  skills           Skill[]
+  sentRequests     SkillRequest[] @relation("Requester")
+  receivedRequests SkillRequest[] @relation("Provider")
+  feedbacksGiven   Feedback[]     @relation("FeedbackAuthor")
+
+  @@map("users")
+}
+
+enum Role {
+  mentor
+  learner
+  admin
+}
+
+model Skill {
+  id          String     @id @default(uuid()) @db.Uuid
+  skillName   String
+  description String?
+  level       SkillLevel @default(beginner)
+  isActive    Boolean    @default(true)
+  userId      String     @db.Uuid
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  user     User           @relation(fields: [userId], references: [id])
+  requests SkillRequest[]
+
+  @@map("skills")
+}
+
+enum SkillLevel {
+  beginner
+  intermediate
+  advanced
+}
+
+model SkillRequest {
+  id          String        @id @default(uuid()) @db.Uuid
+  status      RequestStatus @default(pending)
+  requesterId String        @db.Uuid
+  providerId  String        @db.Uuid
+  skillId     String        @db.Uuid
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  requester User     @relation("Requester", fields: [requesterId], references: [id])
+  provider  User     @relation("Provider", fields: [providerId], references: [id])
+  skill     Skill    @relation(fields: [skillId], references: [id])
+  session   Session?
+
+  @@map("skill_requests")
+}
+
+enum RequestStatus {
+  pending
+  accepted
+  rejected
+}
+
+model Session {
+  id            String        @id @default(uuid()) @db.Uuid
+  scheduledTime DateTime
+  status        SessionStatus @default(scheduled)
+  requestId     String        @unique @db.Uuid
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  request         SkillRequest @relation(fields: [requestId], references: [id])
+  progressRecords Progress[]
+  feedbacks       Feedback[]
+
+  @@map("sessions")
+}
+
+enum SessionStatus {
+  scheduled
+  active
+  completed
+  cancelled
+}
+
+model Progress {
+  id         String   @id @default(uuid()) @db.Uuid
+  percentage Int
+  remarks    String?
+  sessionId  String   @db.Uuid
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  session Session @relation(fields: [sessionId], references: [id])
+
+  @@map("progress")
+}
+
+model Feedback {
+  id         String   @id @default(uuid()) @db.Uuid
+  rating     Int
+  comment    String?
+  fromUserId String   @db.Uuid
+  sessionId  String   @db.Uuid
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  session  Session @relation(fields: [sessionId], references: [id])
+  fromUser User    @relation("FeedbackAuthor", fields: [fromUserId], references: [id])
+
+  @@map("feedbacks")
+}
