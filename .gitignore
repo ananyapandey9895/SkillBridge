@@ -43,5 +43,4 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
-# Vite
-frontend/.vite/
+
